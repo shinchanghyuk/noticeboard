@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shin.noticeboard.mapper.NoticeBoardMapper">
+
+    <resultMap id="selectResultMap" type="com.shin.noticeboard.model.NoticeBoard">
+        <result column="id" property="id" />
+        <result column="userid" property="userid" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="createtime" property="createtime" />
+        <!-- <result column="modifytime" property="modifytime" />
+        <result column="deletetime" property="deletetime" /> -->
+    </resultMap>
+
+    <select id="selectTotalCount" resultType="int">
+        SELECT COUNT(*) FROM t_noticeBoard
+        <choose>
+            <when test="rowSearch != null and rowSearch.length() > 0">
+                <!-- WHERE title LIKE CONCAT('%', #{rowSearch}) OR userid LIKE CONCAT('%', #{rowSearch}) -->
+                WHERE title LIKE CONCAT('%', #{rowSearch}, '%') OR userid LIKE CONCAT('%', #{rowSearch}, '%')
+            </when>
+
+            <!-- 페이지 접근했을 때 search 및 테이블 선택했을 때 detailSearch -->
+            <otherwise>
+                <if test="id != null and id > 0">
+                    WHERE id = #{id} 
+                </if>
+
+                <if test="userid != null and userid.length() > 0">
+                    AND userid = #{userid}
+                </if>
+        
+                <if test="title != null and title.length() > 0">
+                    AND title = #{title}
+                </if>
+        
+                <if test="content != null and content.length() > 0">
+                    AND content = #{content}
+                </if>
+            </otherwise>
+        </choose>
+        ORDER BY createtime DESC
+    </select>
+
+    <!-- NoticeBoard 테이블 데이터 추가를 위한 쿼리 -->
+    <select id="select" resultMap="selectResultMap">
+        SELECT id, userid, title, content, filePath, originalFileName, DATE_FORMAT(createtime, '%Y-%m-%d %p %h:%i:%s') AS createtime
+        FROM t_noticeBoard
+        
+        <choose>
+            <when test="rowSearch != null and rowSearch.length() > 0">
+                <!-- WHERE title LIKE CONCAT('%', #{rowSearch}) OR userid LIKE CONCAT('%', #{rowSearch}) -->
+                WHERE title LIKE CONCAT('%', #{rowSearch}, '%') OR userid LIKE CONCAT('%', #{rowSearch}, '%')
+            </when>
+
+            <!-- 페이지 접근했을 때 search 및 테이블 선택했을 때 detailSearch -->
+            <otherwise>
+                <if test="id != null and id > 0">
+                    WHERE id = #{id} 
+                </if>
+                
+                <if test="userid != null and userid.length() > 0">
+                    AND userid = #{userid}
+                </if>
+        
+                <if test="title != null and title.length() > 0">
+                    AND title = #{title}
+                </if>
+        
+                <if test="content != null and content.length() > 0">
+                    AND content = #{content}
+                </if>
+
+                <if test="originalFileName != null and originalFileName.length() > 0">
+                    AND originalFileName = #{originalFileName}
+                </if>
+            </otherwise>
+        </choose>
+        ORDER BY createtime DESC
+
+        <choose>
+            <when test="(pageSize != null and pageSize > 0)">
+              <!-- LIMIT 20 OFFSET 10  11부터 30까지 가져오기 -->
+            <!-- LIMIT #{pageSize} * #{currentPage} OFFSET #{pageSize} * (#{currentPage} - 1)     -->
+            LIMIT #{pageSize} OFFSET #{offset}
+
+            </when>
+            <otherwise>
+                LIMIT 10 OFFSET 0
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- NoticeBoard 테이블 데이터 추가를 위한 쿼리 -->
+    <insert id="insert">
+        INSERT INTO t_noticeBoard(id, userid, title, content, createtime, modifytime, deletetime, filepath, originalfilename) 
+        VALUES(
+            <!-- auto_increment 사용으로 id는 null로 넣음 -->
+            null,
+            #{userid},
+            #{title},
+            #{content},
+	    	NOW() + 0,
+            null,
+            null,
+            #{filePath},
+            #{originalFileName}
+        )
+    </insert>
+
+    <!-- NoticeBoard 테이블 데이터 변경 위한 쿼리 -->
+    <update id="modify">
+        Update t_noticeBoard set userid=#{userid}, title=#{title}, content=#{content}, filePath=#{filePath}, 
+        originalFileName=#{originalFileName}, modifytime= NOW() + 0 
+        WHERE id=#{id}
+    </update>
+
+    <!-- NoticeBoard 테이블 데이터 삭제를 위한 쿼리 -->
+  	<delete id="delete">
+		DELETE FROM t_noticeBoard 
+		WHERE id IN
+		<foreach item="id" index="index" collection="list"
+		    open="(" separator="," close=")">
+            CAST(#{id} AS INT)
+		</foreach>
+	</delete>
+</mapper>

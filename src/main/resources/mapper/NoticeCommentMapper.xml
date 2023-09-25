@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shin.noticeboard.mapper.NoticeCommentMapper">
+
+    <resultMap id="selectResultMap" type="com.shin.noticeboard.model.NoticeComment">
+        <result column="id" property="id" />
+        <result column="boardid" property="boardid" />
+        <result column="commentid" property="commentid" />
+        <result column="userid" property="userid" />
+        <result column="boarduserid" property="boarduserid" />
+        <result column="comment" property="comment" />
+        <result column="createtime" property="createtime" />
+        <result column="modifytime" property="modifytime" />
+        <!-- <result column="deletetime" property="deletetime" /> -->
+    </resultMap>
+
+
+  <select id="selectCommentCount" resultType="int">
+        SELECT COUNT(*) FROM t_noticeComment
+        
+        <if test="boardid != null and boardid > 0">
+            WHERE boardid = #{boardid}
+        </if>
+        ORDER BY createtime DESC
+    </select>
+
+    <!-- NoticeComment 테이블 데이터 검색을 위한 쿼리 -->
+    <select id="select" resultMap="selectResultMap">
+        SELECT commentid, boardid, userid, comment, createtime from t_noticeComment
+        <!-- DATE_FORMAT(createtime, '%Y-%m-%d %p %h:%i:%s') AS -->
+        <if test="boardid != null and boardid > 0">
+            WHERE boardid = #{boardid}
+        </if>
+           
+        ORDER BY createtime DESC
+    </select>
+
+    <!-- NoticeComment 테이블 데이터 추가를 위한 쿼리 -->
+    <insert id="insert">
+        INSERT INTO t_noticeComment(id, userid, commentid, boardid, comment, createtime, modifytime, deletetime) 
+        VALUES(
+            <!-- auto_increment 사용으로 id는 null로 넣음 -->
+            null,
+            #{userid},
+            #{commentid},
+            #{boardid},
+            #{comment},
+	    	NOW() + 0,
+            null,
+            null
+        )
+    </insert>
+
+    <!-- NoticeComment 테이블 데이터 변경 위한 쿼리 -->
+    <update id="modify">
+        Update t_noticeComment set comment=#{comment}, modifytime= NOW() + 0 
+        WHERE boardid = #{boardid} and commentid = #{commentid} and userid = #{userid}
+    </update>
+
+    <!-- NoticeComment 테이블 데이터 삭제를 위한 쿼리 / 게시글에 의해 삭제되었을 때 동작 -->
+    <delete id="allDelete">
+		DELETE FROM t_noticeComment 
+		WHERE boardid IN
+		<foreach item="boardid" index="index" collection="list"
+		    open="(" separator="," close=")">
+            CAST(#{boardid} AS INT)
+		</foreach>
+	</delete>
+    
+    <!-- NoticeComment 테이블 데이터 삭제를 위한 쿼리  / 관리자나 게시글 작성자가 특정 댓글을 지웠을 떄 동작 -->
+  	<delete id="delete">
+		DELETE FROM t_noticeComment 
+		WHERE boardid = #{boardid} and commentid = #{commentid} and userid = #{userid}
+	</delete>
+</mapper>
