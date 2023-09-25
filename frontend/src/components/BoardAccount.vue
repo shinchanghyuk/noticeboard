@@ -34,7 +34,7 @@
                   </div>
                   <div class="card-footer d-flex align-items-center justify-content-between mb-0">
                     <div class="justify-content-sm-start small"><a href="#" @click="mainPageMove">뒤로가기</a></div>
-                    <button class="btn btn-primary" @click="modify">정보수정</button>
+                    <button class="btn btn-primary" @click.prevent="modify">정보수정</button>
                   </div>
                 </div>
               </div>
@@ -58,7 +58,9 @@ export default {
     return {
       useridInput:'',
       passwordInput: '',
-      passwordConfirmInput:''
+      passwordConfirmInput:'',
+
+      responseData:'',
     };
   },
   created() {
@@ -66,20 +68,25 @@ export default {
   },
   computed: {},
   methods: {
-    userCheck() {
-      axios({
+    async userCheck() {
+      // 비동기가 아닌 동기로 작업해야지만 로그인 결과를 조건문에서 사용할 수 있음
+      await axios({
         url: "http://127.0.0.1:8080/noticeboard/login/",
         method: "POST",
         data: {
           userid: this.useridInput,
           password: this.passwordInput,
         }
-      }).then(res => {
+      }).then(res => {   
         this.responseData = res.data;
-        
-        if(res.data.returnvalue == "1001" || res.data.returnvalue == "1000") {
+        console.log("BoardAccount - responseData : ", res.data.returnvalue);
+        console.log("BoardAccount - responseData : ", this.responseData.returnvalue);
+
+        if(this.responseData.returnvalue == "1001" || this.responseData.returnvalue == "1000") {
+          console.log("BoardAccount - success");
           return true;
         } else {
+          console.log("BoardAccount - failed");
           return false;
         }
       }).catch(err => {
@@ -94,7 +101,8 @@ export default {
       }
 
       if(!this.userCheck()) { 
-        alert("아이디/비밀번호 입력을 다시 확인해주세요.")
+        console.log("BoardAccount - usercheck is false : " + this.userCheck());
+        alert("아이디/비밀번호 입력을 다시 확인해주세요.");
         return;
       }
 
