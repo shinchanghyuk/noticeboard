@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shin.noticeboard.mapper.NoticeAccountMapper">
+
+    <resultMap id="loginResultMap" type="com.shin.noticeboard.model.NoticeAccount">
+        <result column="userid" property="userid" />
+        <result column="status" property="status" />
+        <result column="usertype" property="usertype" />
+        <!-- <result column="createtime" property="createtime" /> -->
+    </resultMap>
+
+    <!-- Account  테이블 데이터 검색을 위한 쿼리 -->
+    <select id="login" resultMap="loginResultMap">
+        SELECT * from t_account
+        WHERE
+   
+        <if test="userid != null and userid.length > 0">
+            userid = #{userid} 
+        </if>
+
+        <if test="password != null and password.length() > 0">
+            AND password = #{password}
+        </if>
+    </select>
+
+    <!-- Account 테이블 데이터 추가를 위한 쿼리 -->
+    <!-- status 1 : 정상, 0 : 탈퇴 및 삭제 -->
+    <!-- usetype 0 : 일반사용자, 1 : 관리자 -->
+    <insert id="create">
+        INSERT INTO t_account(userid, password, status, usertype, createtime, modifytime, deletetime) 
+        VALUES(
+            #{userid},
+            #{password},
+            1,
+            0,
+	    	NOW() + 0,
+            null,
+            null
+        )
+    </insert>
+
+    <!-- Account 테이블 데이터 삭제를 위한 쿼리 -->
+    <update id="modify">
+        Update t_account set password=#{password} modifytime= NOW() + 0 
+        WHERE userid=#{userid}
+    </update>
+
+    <!-- Account 테이블 데이터 삭제를 위한 쿼리 -->
+  	<delete id="delete">
+		DELETE FROM t_account 
+		WHERE userid IN
+		<foreach item="userid" index="index" collection="list"
+		    open="(" separator="," close=")">
+            CAST(#{userid} AS INT)
+		</foreach>
+	</delete>
+</mapper>
