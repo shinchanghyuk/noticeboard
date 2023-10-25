@@ -72,7 +72,10 @@ export default {
         boardUserid: '',
         boardId: '',
       },
+
       filename:'',
+    
+      apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
     };
   },
   created() {
@@ -129,7 +132,7 @@ export default {
       this.sessionCheck();
       
       axios({
-        url: "http://127.0.0.1:8080/noticeboard/fileDownload/",
+        url: this.apiBaseUrl + "noticeboard/fileDownload/",
         method: "POST",
         data: {
           id:this.id,
@@ -163,7 +166,7 @@ export default {
       
       if(confirm("게시글을 삭제하겠습니까?")) {
         axios({
-          url: "http://127.0.0.1:8080/noticeboard/delete/",
+          url: this.apiBaseUrl + "noticeboard/delete/",
           method: "POST",
           data: [
             this.id

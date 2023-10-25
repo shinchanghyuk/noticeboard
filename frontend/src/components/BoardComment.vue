@@ -51,6 +51,8 @@ export default {
       modifyButtonClick: false,
       commentClickIndex:0,
       modifyCommentInput:'',
+
+      apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
     };
   },
   created() {
@@ -70,7 +72,7 @@ export default {
       this.sessionCheck();
     
       axios({
-        url: "http://127.0.0.1:8080/noticeboard/commentSearch/",
+        url: this.apiBaseUrl + "noticeboard/commentSearch/",
         method: "POST",
         data: {
           boardid: this.boardDataJsonData.boardId,
@@ -139,7 +141,7 @@ export default {
       }
 
       axios({
-        url: "http://127.0.0.1:8080/noticeboard/commentSave/",
+        url: this.apiBaseUrl + "noticeboard/commentSave/",
         method: "POST",
         data: {
           userid: this.userid,
@@ -187,7 +189,7 @@ export default {
     commentid = this.boardDataJsonData.boardId + "-" + this.comments[index].createtime;
 
     axios({
-      url: "http://127.0.0.1:8080/noticeboard/commentDelete/",
+      url: this.apiBaseUrl + "noticeboard/commentDelete/",
       method: "POST",
       data: {
         // 몇번째의 댓글에 대한 삭제버튼인지 알 수 있는 ID를 담아야 함

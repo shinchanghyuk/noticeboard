@@ -1,14 +1,4 @@
 module.exports = {
-  // 개발 서버 설정
-  devServer: {
-    port: 8080, // 개발 서버 포트
-    proxy: {
-      '/noticeboard': {
-        target: 'http://127.0.0.1:8080', // Spring Boot 서버 주소
-        changeOrigin: true
-      }
-    }
-  },
 
   // 빌드 설정
   productionSourceMap: false, // 소스 맵 비활성화

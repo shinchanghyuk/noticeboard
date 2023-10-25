@@ -88,6 +88,8 @@ export default {
       // 정렬기준
       sortBy:'createtime',
       sortType:'desc',
+
+      apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
     };
   },
   mounted() { //mounted는 페이지가 켜질때 실행됨
@@ -123,7 +125,7 @@ export default {
       //this.items = '';
       
       axios({
-        url: "http://127.0.0.1:8080/noticeboard/search/",
+        url: this.apiBaseUrl + "noticeboard/search/",
         method: "POST",
         data: {
           rowSearch: this.rowSearchValue,
