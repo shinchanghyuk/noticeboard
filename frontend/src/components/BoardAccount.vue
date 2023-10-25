@@ -60,7 +60,8 @@ export default {
       passwordInput: '',
       passwordConfirmInput:'',
 
-      responseData:'',
+      responseData:'', 
+      apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
     };
   },
   created() {
@@ -71,7 +72,7 @@ export default {
     async userCheck() {
       // 비동기가 아닌 동기로 작업해야지만 로그인 결과를 조건문에서 사용할 수 있음
       await axios({
-        url: "http://127.0.0.1:8080/noticeboard/login/",
+        url: this.apiBaseUrl + "noticeboard/login/",
         method: "POST",
         data: {
           userid: this.useridInput,
@@ -107,7 +108,7 @@ export default {
       }
 
       axios({
-        url: "http://127.0.0.1:8080/noticeboard/accountModify/",
+        url: this.apiBaseUrl + "noticeboard/accountModify/",
         method: "POST",
         data: {
           userid: this.useridInput,

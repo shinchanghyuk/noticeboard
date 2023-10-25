@@ -74,6 +74,8 @@ export default {
     data() {
         return {
             userid: '',
+
+            apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
         };
     },
     methods: {
@@ -109,7 +111,7 @@ export default {
                 const userid = this.userid;
 
                 axios({
-                    url: "http://127.0.0.1:8080/noticeboard/accountDelete/",
+                    url: this.apiBaseUrl + "noticeboard/accountDelete/",
                     method: "POST",
                     data: {
                         userid

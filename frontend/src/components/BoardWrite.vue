@@ -154,7 +154,9 @@ export default {
       buttonType: '',
       selectedFile: '',
       uploadedFile: '',
-      title:''
+      title:'',
+
+      apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
     };
   },
   methods: {
@@ -204,7 +206,7 @@ export default {
       }
       
       axios({
-        url: "http://127.0.0.1:8080/noticeboard/save/",
+        url: this.apiBaseUrl + "noticeboard/save/",
         method: "POST",
         data: formData,
         headers: {

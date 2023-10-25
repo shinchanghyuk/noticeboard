@@ -45,7 +45,10 @@ export default {
       useridInput:'',
       passwordInput: '',
       responseData:'',
-      usertype:''
+      usertype:'',
+
+      apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
+
     };
   },
   computed: {},
@@ -59,7 +62,7 @@ export default {
       }
 
       axios({
-        url: "http://127.0.0.1:8080/noticeboard/login/",
+        url: this.apiBaseUrl + "noticeboard/login/",
         method: "POST",
         data: {
           userid: this.useridInput,
