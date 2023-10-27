@@ -45,7 +45,7 @@ public class NoticeBoardController {
 
     private ObjectMapper objectMapper;
 
-    @Value("${upload.file.path}")
+    @Value("${app.database.uploadFilePath}")
     private String uploadFilePath;
 
     // 서비스 주입

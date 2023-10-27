@@ -10,7 +10,9 @@ import BoardAccount from '../components/BoardAccount.vue';
 
 const routes = [
   {
-    path: '/',
+    path: process.env.VUE_APP_TYPE === 'production'
+      ? '/noticeboard/'
+    : '/',
     name: 'BoardLogin',
     component: BoardLogin,
   },

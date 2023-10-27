@@ -16,6 +16,49 @@
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<environment>dev</environment>
+				<linux.service.postfix></linux.service.postfix>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>prod</id>
+			<properties>
+				<environment>prod</environment>
+				<linux.service.postfix></linux.service.postfix>
+			</properties>
+			<build>
+				<resources>
+					<resource>
+						<filtering>true</filtering>
+						<directory>src/main/resources</directory>
+						<excludes>
+							<!-- 포함시키지 않아야할 설정파일들을 지정 -->
+							<exclude>**/application.yml</exclude>
+							<!-- <exclude>**/application.properties</exclude> -->
+							<exclude>**/logback.xml</exclude>
+						</excludes>
+					</resource>
+
+					<resource>
+						<filtering>true</filtering>
+						<directory>profile/prod</directory>
+						<includes>
+							<!-- 포함시켜야 할 설정파일들을 지정 -->
+							<include>**/application.yml</include>
+							<include>**/logback.xml</include>
+						</includes>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+	</profiles>
+		
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -66,9 +109,13 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
         </dependency>
-
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-dbcp2</artifactId>
+			<version>2.1.1</version>
+		</dependency>		
 	</dependencies>
-
+	
 	<build>
 		<plugins>
 			<!-- ... 기존 빌드 플러그인 ... -->
@@ -95,6 +142,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>
