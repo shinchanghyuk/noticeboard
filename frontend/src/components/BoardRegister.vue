@@ -109,7 +109,7 @@ export default {
           // alert(res.data.message);
           if(res.status === 200) {
             alert("아이디 생성에 성공하였습니다.");
-            this.$router.push('/'); // 로그인 페이지로 이동
+            this.$router.push('/noticeboard'); // 로그인 페이지로 이동
           } else {
             alert("아이디 생성에 실패하였습니다.");
           }
@@ -120,7 +120,7 @@ export default {
       },
       loginPageMove() {
         console.log("loginPageMove START");
-        this.$router.push('/'); // 로그인 페이지로 이동
+        this.$router.push('/noticeboard'); // 로그인 페이지로 이동
       },
   }
 };

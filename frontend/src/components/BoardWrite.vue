@@ -221,7 +221,7 @@ export default {
             alert("게시글 저장을 성공하였습니다.");
           }
           // this.$router.push({ path: '/boardMain', query: { userid: this.userid, usertype: this.usertype}});
-          this.$router.push('/boardMain');
+          this.$router.push('/noticeboard/boardMain');
         } else {
           alert("게시글 저장을 실패하였습니다.");
         }
@@ -232,13 +232,13 @@ export default {
     mainPageMove() {
       console.log("mainPageMove START");
       //this.$router.push({ path: '/boardMain', query: { userid: this.userid, usertype: this.usertype}});
-      this.$router.push('/boardMain');
+      this.$router.push('/noticeboard/boardMain');
     },
     sessionCheck() {
       // 세션만료 시 로그인 화면으로 이동
       if((this.userid == null || this.userid == "") || (this.usertype == null || this.usertype == "")) {
         alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
-        this.$router.push('/');
+        this.$router.push('/noticeboard');
       }
     }
   },

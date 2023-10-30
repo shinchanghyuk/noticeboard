@@ -11,9 +11,9 @@
           <h6 class="text-md-start"> {{ comment.createtimeFormat }}</h6> 
           <div class="d-flex">
           
-          <!-- 수정 삭제는 관리자 및 게시글 작성자만 할 수 있도록 수정해야 함-->
-            <button class="btn btn-primary mx-1" v-show="comments.boardUserid === userid || usertype == 1" @click="modifyComment(index)">수정</button>
-            <button class="btn btn-primary mx-1" v-show="comments.boardUserid === userid || usertype == 1" @click="deleteComment(index)">삭제</button>
+          <!-- 수정 삭제는 관리자 및 게시글, 댓글 작성자만 할 수 있도록 수정해야 함-->
+            <button class="btn btn-primary mx-1" v-show="comment.boardUserid === userid || comment.userid === userid || usertype == 1" @click="modifyComment(index)">수정</button>
+            <button class="btn btn-primary mx-1" v-show="comment.boardUserid === userid || comment.userid === userid || usertype == 1" @click="deleteComment(index)">삭제</button>
           </div>
         </div>
       </div>
@@ -214,7 +214,7 @@ export default {
       // 세션만료 시 로그인 화면으로 이동
       if((this.userid == null || this.userid == "") || (this.usertype == null || this.usertype == "")) {
         alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
-        this.$router.push('/');
+        this.$router.push('/noticeboard');
       }
     }
   }

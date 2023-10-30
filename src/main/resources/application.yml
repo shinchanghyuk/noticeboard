@@ -1,0 +1,19 @@
+app:
+  database:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/noticeBoardDB?allowMultiQueries=true&amp;dumpQueriesOnException=true
+    username: noticeboard
+    password: fnehfvmsla1!
+    classpath: classpath:mapper/*.xml
+    uploadFilePath: D:\Sources\uploads
+
+  cors:
+    baseurl: http://localhost:8080
+
+spring:
+  thymeleaf:
+    enabled: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB

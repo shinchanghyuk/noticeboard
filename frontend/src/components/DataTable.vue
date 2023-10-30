@@ -75,9 +75,9 @@ export default {
         { text: '작성일자', value: 'createtime' }
       ],
       items: [
-         { id: 1, title: '테스트데이터1', content: '테스트데이터 내용1', userid: 'John Doe', createtime: '2023-09-08 14:32:35' },
-         { id: 2, title: '테스트데이터2', content: '테스트데이터 내용2', userid: 'shin', createtime: '2023-09-08 14:32:35' }
-        // 다른 데이터 항목 추가
+        // 테스트 데이터
+        //  { id: 1, title: '테스트데이터1', content: '테스트데이터 내용1', userid: 'John Doe', createtime: '2023-09-08 14:32:35' },
+        //  { id: 2, title: '테스트데이터2', content: '테스트데이터 내용2', userid: 'shin', createtime: '2023-09-08 14:32:35' }
       ],
       itemsSelected: [],
       rowsPerPage: 10, // 페이지당 표시할 행의 수 (기본값 25)
@@ -178,7 +178,7 @@ export default {
     },
     rowClick(item) {
       const routerParams = {
-        path: '/boardDetail',
+        path: '/noticeboard/boardDetail',
         query: {
           id: item.id,
           boardUserid: item.userid,

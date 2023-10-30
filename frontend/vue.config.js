@@ -2,7 +2,7 @@ module.exports = {
 
   // 빌드 설정하여, 정적파일 경로세팅
   publicPath: process.env.VUE_APP_TYPE === 'production'
-    ? 'noticeboard/'
+    ? '/noticeboard/'
     : '/',  
   // publicPath: 'noticeboard',
 

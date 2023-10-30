@@ -118,12 +118,12 @@ export default {
     mainPageMove() {
       console.log("BoardDetail - mainPageMove START");
       //this.$router.push({ path: '/boardMain', query: { userid: this.userid, usertype: this.usertype}});
-      this.$router.push('/boardMain');
+      this.$router.push('/noticeboard/boardMain');
     },
     boardModify() {
       console.log("BoardDetail - boardModify START");
       // this.$router.push({ path: '/boardWrite', query: { userid: this.userid, usertype: this.usertype, title: this.title, content: this.content, id: this.id }});
-      this.$router.push({ path: '/boardWrite', query: { title: this.title, content: this.content, id: this.id, filename : this.filename}});
+      this.$router.push({ path: '/noticeboard/boardWrite', query: { title: this.title, content: this.content, id: this.id, filename : this.filename}});
     },
     fileDownload(event) {
       console.log("BoardDetail - fileDownload START");
@@ -175,7 +175,7 @@ export default {
           if(res.status === 200) {
             alert("게시글 삭제를 성공하였습니다.");
             // this.$router.push({ path: '/boardMain', query: { userid: this.userid, usertype: this.usertype}});
-            this.$router.push('/boardMain');
+            this.$router.push('/noticeboard/boardMain');
           } else {
             alert("게시글 삭제를 실패하였습니다.");
           }
@@ -189,7 +189,7 @@ export default {
       // 세션만료 시 로그인 화면으로 이동
       if((this.userid == null || this.userid == "") || (this.usertype == null || this.usertype == "")) {
         alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
-        this.$router.push('/');
+        this.$router.push('/noticeboard');
       }
     }
   }

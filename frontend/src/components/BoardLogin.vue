@@ -84,7 +84,7 @@ export default {
             sessionStorage.setItem('usertype', this.usertype);
             
             // this.$router.push({ path: '/boardMain', query: { userid: this.useridInput, usertype: this.usertype}});
-            this.$router.push('/boardMain');
+            this.$router.push('/noticeboard/boardMain');
           } else {
             alert("로그인에 실패하였습니다.");
           }
@@ -95,7 +95,7 @@ export default {
       },
       idCreate() {
       console.log("idCreate START");
-        this.$router.push('/boardRegister'); // 아이디 생성페이지로 이동
+        this.$router.push('/noticeboard/boardRegister'); // 아이디 생성페이지로 이동
       },
   }
 };

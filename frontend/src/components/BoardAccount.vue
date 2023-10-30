@@ -118,7 +118,7 @@ export default {
           // alert(res.data.message);
           if(res.status === 200) {
             alert("사용자 정보수정을 성공하였습니다. 재로그인 해주세요");
-            this.$router.push('/'); // 로그인 페이지로 이동
+            this.$router.push('/noticeboard'); // 로그인 페이지로 이동
             sessionStorage.removeItem("userid");
             sessionStorage.removeItem("usertype");
           } else {
@@ -131,7 +131,7 @@ export default {
     },
     mainPageMove() {
       console.log("mainPageMove START");
-      this.$router.push('/boardMain'); // 메인 페이지로 이동
+      this.$router.push('/noticeboard/boardMain'); // 메인 페이지로 이동
     },
   }
 };

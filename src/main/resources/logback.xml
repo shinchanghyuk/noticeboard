@@ -3,9 +3,9 @@
   
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-    <file>D:\Sources\logs\noticeboard.log</file>
+    <file>D:\Sources\logs\noticeboard\noticeboard.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>D:\Sources\logs\noticeboard.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+      <fileNamePattern>D:\Sources\logs\noticeboard\noticeboard.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <maxFileSize>100MB</maxFileSize>
       </timeBasedFileNamingAndTriggeringPolicy>

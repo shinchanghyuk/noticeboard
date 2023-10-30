@@ -81,15 +81,15 @@ export default {
     methods: {
         mainPageMove() {
             console.log("BoardSideNav - mainPageMove START");
-            this.$router.push('/boardMain');
+            this.$router.push('/noticeboard/boardMain');
         },
         boardWrite() {
             console.log("BoardSideNav - boardWrite START");
-            this.$router.push('/boardWrite');
+            this.$router.push('/noticeboard/boardWrite');
         },
         accountPageMove() {
             console.log("BoardSideNav - accountPageMove START");
-            this.$router.push('/boardAccount');
+            this.$router.push('/noticeboard/boardAccount');
         },
         logout() {
             console.log("BoardSideNav - logout START");
@@ -97,7 +97,7 @@ export default {
                 sessionStorage.removeItem("userid");
                 sessionStorage.removeItem("usertype");
                 
-                this.$router.push('/');
+                this.$router.push('/noticeboard');
             }
         },
         accountDelete() {
@@ -106,7 +106,7 @@ export default {
                 sessionStorage.removeItem("userid");
                 sessionStorage.removeItem("usertype");
                 
-                this.$router.push('/');
+                this.$router.push('/noticeboard');
 
                 const userid = this.userid;
 
@@ -119,7 +119,7 @@ export default {
                 }).then(res => {
                     if(res.status === 200) {
                         alert("회원탈퇴가 완료되었습니다.");
-                        this.$router.push('/'); // 로그인 페이지로 이동
+                        this.$router.push('/noticeboard'); // 로그인 페이지로 이동
                     } else {
                         alert("회원탈퇴가 실패되었습니다.");
                     }
