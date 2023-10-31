@@ -1,13 +1,13 @@
 <template>
   <div>
     <BoardSideNav/>     
-    <div id="layoutAuthentication"> 
+    <div id="layoutAuthentication" class="mt-2 detail-container"> 
       <div id="layoutAuthentication_content">
         <main>
           <div>
             <div class="row justify-content-center">
               <div class="col-lg-10">
-                <div class="card shadow-lg border-0 rounded-lg mt-6 ms-6">     
+                <div class="card shadow-lg border-0 rounded-lg mt-6">     
                   <div class="card-header"><h3 class="text-start ms-sm-1 font-weight-light my-4">게시글 상세보기</h3></div> 
                     <div class="card-body">
                     <form>

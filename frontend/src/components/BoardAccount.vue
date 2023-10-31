@@ -1,10 +1,10 @@
 <template>
   <div>
     <BoardSideNav/>   
-    <div id="layoutAuthentication"> 
+    <div id="layoutAuthentication" class="mt-5">
       <div id="layoutAuthentication_content">
         <main>
-          <div class="container">
+          <div class="account-container mt-5">
             <div class="row justify-content-center">
               <div class="col-lg-7">
                 <div class="card shadow-lg border-0 rounded-lg mt-5">

@@ -1,8 +1,7 @@
 <template>
     <div>
         <BoardSideNav/>
-        
-        <div id="layoutAuthentication"> 
+        <div id="layoutAuthentication" class="mt-6 main-container"> 
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container_sepa px-4">                                

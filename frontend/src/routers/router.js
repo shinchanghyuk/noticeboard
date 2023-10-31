@@ -10,34 +10,36 @@ import BoardAccount from '../components/BoardAccount.vue';
 
 const routes = [
   {
-    path: process.env.VUE_APP_TYPE === 'production'
-      ? '/noticeboard/'
-    : '/',
+    path: '/',
+    redirect: '/noticeboard',
+  },
+  {
+    path: '/noticeboard',
     name: 'BoardLogin',
     component: BoardLogin,
   },
   {
-    path: '/boardMain',
+    path: '/noticeboard/boardMain',
     name: 'BoardMain',
     component: BoardMain,
   },
   {
-    path: '/boardRegister',
+    path: '/noticeboard/boardRegister',
     name: 'BoardRegister',
     component: BoardRegister,
   },
   {
-    path: '/boardWrite',
+    path: '/noticeboard/boardWrite',
     name: 'BoardWrite',
     component: BoardWrite,
   },
   {
-    path: '/boardDetail',
+    path: '/noticeboard/boardDetail',
     name: 'BoardDetail',
     component: BoardDetail,
   },
   {
-    path: '/boardAccount',
+    path: '/noticeboard/boardAccount',
     name: 'BoardAccount',
     component: BoardAccount,
   },
@@ -49,3 +51,47 @@ const router = createRouter({
 });
 
 export default router;
+
+
+// {
+//   path: process.env.VUE_APP_TYPE === 'production'
+//     ? '/noticeboard'
+//   : '/noticeboard',
+//   name: 'BoardLogin',
+//   component: BoardLogin,
+// },
+// {
+//   path: process.env.VUE_APP_TYPE === 'production'
+//     ? '/noticeboard/boardMain'
+//   : '/noticeboard/boardMain',
+//   name: 'BoardMain',
+//   component: BoardMain,
+// },
+// {
+//   path: process.env.VUE_APP_TYPE === 'production'
+//     ? '/noticeboard/boardRegister'
+//   : '/noticeboard/boardRegister',
+//   name: 'BoardRegister',
+//   component: BoardRegister,
+// },
+// {
+//   path: process.env.VUE_APP_TYPE === 'production'
+//     ? '/noticeboard/boardWrite'
+//   : '/noticeboard/boardWrite',
+//   name: 'BoardWrite',
+//   component: BoardWrite,
+// },
+// {
+//   path: process.env.VUE_APP_TYPE === 'production'
+//     ? '/noticeboard/boardDetail'
+//   : '/noticeboard/boardDetail',
+//   name: 'BoardDetail',
+//   component: BoardDetail,
+// },
+// {
+//   path: process.env.VUE_APP_TYPE === 'production'
+//     ? '/noticeboard/boardAccount'
+//   : '/noticeboard/boardAccount',
+//   name: 'BoardAccount',
+//   component: BoardAccount,
+// },

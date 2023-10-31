@@ -78,7 +78,6 @@
   --bs-code-color: #d63384;
   --bs-highlight-bg: #fff3cd;
 }
-
 *,
 *::before,
 *::after {
@@ -644,7 +643,7 @@ progress {
 .container_sepa {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
-  width: 85%;
+  width: 87.7777%;
   padding-right: calc(var(--bs-gutter-x) * 0.5);
   padding-left: calc(var(--bs-gutter-x) * 0.5);
   margin-left: auto;
@@ -3815,7 +3814,7 @@ textarea.form-control-lg {
   padding-bottom: var(--bs-navbar-brand-padding-y);
   margin-right: var(--bs-navbar-brand-margin-end);
   font-size: var(--bs-navbar-brand-font-size);
-  color: var(--bs-navbar-brand-color);
+  color: white;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -6828,7 +6827,7 @@ textarea.form-control-lg {
   --bs-aspect-ratio: 42.8571428571%;
 }
 
-.fixed-top, .sb-nav-fixed #layoutSidenav #layoutSidenav_nav, .sb-nav-fixed .sb-topnav {
+.fixed-top, #layoutSidenav #layoutSidenav_nav, .sb-nav-fixed .sb-topnav {
   position: fixed;
   top: 0;
   right: 0;
@@ -6842,6 +6841,18 @@ textarea.form-control-lg {
   bottom: 0;
   left: 0;
   z-index: 1030;
+}
+
+.sb-nav-fixed {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 25;
+  padding-top: 96px;
+  width: 271px;
+  background: #fff;
+  transition: width 0.5s;
 }
 
 .sticky-top {
@@ -10884,7 +10895,10 @@ body {
 #layoutAuthentication {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+
+  /* min-height: 100vh; */
 }
 #layoutAuthentication #layoutAuthentication_content {
   min-width: 0;
@@ -10940,6 +10954,7 @@ body {
     margin-left: 0;
     transition: margin 0.15s ease-in-out;
   }
+
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
     transform: translateX(-225px);
   }
@@ -11289,9 +11304,49 @@ body {
   position: absolute;
   top: 0px;
   right: 15px;
+  display: flex;
+  justify-content: end;
+  align-items: center;
 }
 
 .delete-button {
   width:15px;
   height:15px;
+}
+
+.main-container { 
+  padding: 0 0 0 75px;
+  margin-left: auto;
+  box-sizing: border-box;
+}
+
+.detail-container { 
+  padding: 0 0 0 175px;
+  margin-left: auto;
+  box-sizing: border-box;
+}
+
+
+@media (max-width: 1350px) {
+  .sb-nav-fixed {
+    display: none;
+  }
+
+  .container_sepa {
+    width: 100%;
+  }
+
+  .detail-container {
+    padding-left: 0px;
+  }
+
+  .main-container {
+    padding-left: 0px;
+  }
+}
+
+@media (min-width: 1350px) {
+  .account-container { 
+    margin-left: 150px;
+  }
 }

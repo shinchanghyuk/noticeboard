@@ -127,7 +127,7 @@ public class NoticeBoardController {
                             
                     inputStream = file.getInputStream();
 
-                    File directoryFile = new File(uploadFilePath + formattedDate);
+                    File directoryFile = new File(uploadFilePath + File.separator + formattedDate);
                     
                     // 상위 디렉토리가 없으면 생성해줌
                     if(!directoryFile.exists()) {
@@ -135,7 +135,7 @@ public class NoticeBoardController {
                         directoryFile.mkdirs();
                     }
 
-                    outputFile = new File(uploadFilePath + formattedDate + File.separator + fileName);
+                    outputFile = new File(uploadFilePath + File.separator + formattedDate + File.separator + fileName);
                     logger.info("NoticeBoardController - filePath : " + outputFile.getAbsolutePath());
 
                     fileOutputStream = new FileOutputStream(outputFile);
