@@ -1,7 +1,7 @@
 <template>
   <div>
     <BoardSideNav/>
-    <div id="layoutAuthentication" class="mt-2 detail-container"> 
+    <div id="layoutAuthentication" class="detail-container"> 
       <div id="layoutAuthentication_content">
         <main>
           <div>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <BoardSideNav/>   
-    <div id="layoutAuthentication" class="mt-5">
+    <div id="layoutAuthentication">
       <div id="layoutAuthentication_content">
         <main>
           <div class="account-container mt-5">
