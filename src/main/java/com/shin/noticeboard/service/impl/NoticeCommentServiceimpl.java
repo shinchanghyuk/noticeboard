@@ -6,45 +6,28 @@ import com.shin.noticeboard.mapper.NoticeCommentMapper;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class NoticeCommentServiceimpl implements NoticeCommentService {
 
-    private NoticeCommentMapper noticeCommentMapper;
-    private static final Logger logger = LoggerFactory.getLogger(NoticeCommentService.class);
+    private final NoticeCommentMapper noticeCommentMapper;
 
     @Autowired
-    public void setNoticeCommentMapper(NoticeCommentMapper noticeCommentMapper) {
+    public NoticeCommentServiceimpl(NoticeCommentMapper noticeCommentMapper) {
         this.noticeCommentMapper = noticeCommentMapper;
     }
 
     public int selectCommentCount(NoticeComment noticeComment) {
-        int count = 0;
-        try {
-            count = noticeCommentMapper.selectCommentCount(noticeComment);
-        } catch(Exception e){
-            logger.error("NoticeCommentServiceimpl - selectCommentCount Exception : ", e);
-        }
-
-        return count;
+        return noticeCommentMapper.selectCommentCount(noticeComment);
     }
     public List<NoticeComment> search(NoticeComment noticeComment) {
-        List<NoticeComment> noticeCommentList = null;
-        int count = 0;
-
-        try {
-        //    count = noticeBoardMapper.selectTotalCount(noticeBoard);
-            noticeCommentList = noticeCommentMapper.select(noticeComment);
-
-        } catch (Exception e) {
-            logger.error("NoticeCommentServiceimpl - search Exception : ", e);
-        }
-
-        return noticeCommentList;
+        return noticeCommentMapper.select(noticeComment);
     }
 
     public void save(NoticeComment noticeComment) {
@@ -56,7 +39,7 @@ public class NoticeCommentServiceimpl implements NoticeCommentService {
     }
 
     public void allDelete(List<String> id) {
-        logger.info("NoticeCommentService - allDelete : ", id.toString());
+        log.info("NoticeCommentService - allDelete : {}", id.toString());
         noticeCommentMapper.allDelete(id);
     }
 

@@ -7,16 +7,17 @@ import BoardWrite from '../components/BoardWrite.vue';
 import BoardMain from '../components/BoardMain.vue';
 import BoardDetail from '../components/BoardDetail.vue';
 import BoardAccount from '../components/BoardAccount.vue';
+import BoardNotPage from '../components/BoardNotPage.vue';
 
 const routes = [
-  {
-    path: '/',
-    redirect: '/noticeboard',
-  },
   {
     path: '/noticeboard',
     name: 'BoardLogin',
     component: BoardLogin,
+  },
+  {
+    path: '/',
+    redirect: '/noticeboard',
   },
   {
     path: '/noticeboard/boardMain',
@@ -43,6 +44,15 @@ const routes = [
     name: 'BoardAccount',
     component: BoardAccount,
   },
+  {
+    path: "/noticeboard/boardNotPage",
+    name: "BoardNotPage",
+    component: BoardNotPage,
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/noticeboard/boardNotPage"
+    }
 ];
 
 const router = createRouter({

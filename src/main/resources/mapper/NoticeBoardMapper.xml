@@ -18,26 +18,32 @@
         <choose>
             <when test="rowSearch != null and rowSearch.length() > 0">
                 <!-- WHERE title LIKE CONCAT('%', #{rowSearch}) OR userid LIKE CONCAT('%', #{rowSearch}) -->
-                WHERE title LIKE CONCAT('%', #{rowSearch}, '%') OR userid LIKE CONCAT('%', #{rowSearch}, '%')
+                <where>
+                    <if test="title != null and title.length() > 0">
+                        title LIKE CONCAT('%', #{rowSearch}, '%') OR userid LIKE CONCAT('%', #{rowSearch}, '%')
+                    </if>
+                </where>
             </when>
 
             <!-- 페이지 접근했을 때 search 및 테이블 선택했을 때 detailSearch -->
             <otherwise>
-                <if test="id != null and id > 0">
-                    WHERE id = #{id} 
-                </if>
+                <where>
+                    <if test="id != null and id > 0">
+                        AND id = #{id}
+                    </if>
 
-                <if test="userid != null and userid.length() > 0">
-                    AND userid = #{userid}
-                </if>
-        
-                <if test="title != null and title.length() > 0">
-                    AND title = #{title}
-                </if>
-        
-                <if test="content != null and content.length() > 0">
-                    AND content = #{content}
-                </if>
+                    <if test="userid != null and userid.length() > 0">
+                        AND userid = #{userid}
+                    </if>
+
+                    <if test="title != null and title.length() > 0">
+                        AND title = #{title}
+                    </if>
+
+                    <if test="content != null and content.length() > 0">
+                        AND content = #{content}
+                    </if>
+                </where>
             </otherwise>
         </choose>
         ORDER BY createtime DESC
@@ -56,25 +62,27 @@
 
             <!-- 페이지 접근했을 때 search 및 테이블 선택했을 때 detailSearch -->
             <otherwise>
-                <if test="id != null and id > 0">
-                    WHERE id = #{id} 
-                </if>
-                
-                <if test="userid != null and userid.length() > 0">
-                    AND userid = #{userid}
-                </if>
-        
-                <if test="title != null and title.length() > 0">
-                    AND title = #{title}
-                </if>
-        
-                <if test="content != null and content.length() > 0">
-                    AND content = #{content}
-                </if>
+                <where>
+                    <if test="id != null and id > 0">
+                        AND id = #{id}
+                    </if>
 
-                <if test="originalFileName != null and originalFileName.length() > 0">
-                    AND originalFileName = #{originalFileName}
-                </if>
+                    <if test="userid != null and userid.length() > 0">
+                        AND userid = #{userid}
+                    </if>
+
+                    <if test="title != null and title.length() > 0">
+                        AND title = #{title}
+                    </if>
+
+                    <if test="content != null and content.length() > 0">
+                        AND content = #{content}
+                    </if>
+
+                    <if test="originalFileName != null and originalFileName.length() > 0">
+                        AND originalFileName = #{originalFileName}
+                    </if>
+                </where>
             </otherwise>
         </choose>
         ORDER BY createtime DESC

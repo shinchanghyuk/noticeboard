@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.shin.noticeboard.model.NoticeBoard;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface NoticeBoardMapper {
 
     int selectTotalCount(NoticeBoard noticeBoard);

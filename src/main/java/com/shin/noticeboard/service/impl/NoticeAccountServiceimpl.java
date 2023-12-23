@@ -29,6 +29,7 @@ public class NoticeAccountServiceimpl implements NoticeAccountService {
             resultNoticeAccount = noticeAccountMapper.login(noticeAccount);
         } catch (Exception e) {
             logger.error("NoticeAccountServiceimpl - login Exception : ", e);
+            throw new IllegalStateException(e);
         }
 
         // 사용자가 있는지 체크

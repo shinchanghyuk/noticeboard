@@ -13,18 +13,18 @@
     <!-- Account  테이블 데이터 검색을 위한 쿼리 -->
     <select id="login" resultMap="loginResultMap">
         SELECT * from t_account
-        WHERE
-   
-        <if test="userid != null and userid.length > 0">
-            userid = #{userid}
-        </if>
+        <where>
+            <if test="userid != null and userid.length() > 0">
+                AND userid = #{userid}
+            </if>
 
-        <if test="password != null and password.length() > 0">
-            AND password = #{password}
-        </if>
-        
-        <!-- status가 1이면 유효한 사용자임. 유효한 사용자가 로그인 해야됨 -->
-        AND status = 1
+            <if test="password != null and password.length() > 0">
+                AND password = #{password}
+            </if>
+
+            <!-- status가 1이면 유효한 사용자임. 유효한 사용자가 로그인 해야됨 -->
+            AND status = 1
+        </where>
     </select>
 
     <!-- Account 테이블 데이터 추가를 위한 쿼리 -->
@@ -45,22 +45,23 @@
 
     <!-- Account 테이블 데이터 삭제를 위한 쿼리 -->
     <update id="modify">
-        Update t_account set password=#{password}, modifytime= NOW() + 0 
-        WHERE userid=#{userid}
+        Update t_account set password=#{password}, modifytime= NOW() + 0
+        <where>
+            <if test="userid != null and userid.length() > 0">
+                AND userid=#{userid};
+            </if>
+        </where>
     </update>
 
-    <!-- <update id="delete">
-        Update t_account set status=0, deletetime= NOW() + 0
-        WHERE userid=#{userid}
-    </update> -->
-  	
     <!-- Account 테이블 데이터 삭제를 위한 쿼리 -->
     <delete id="delete">
-		DELETE FROM t_account 
-		WHERE userid IN
-		<foreach item="userid" index="index" collection="list"
-		    open="(" separator="," close=")">
-            CAST(#{userid} AS INT)
-		</foreach>
+		DELETE FROM t_account
+        <where>
+            userid IN
+            <foreach item="userid" index="index" collection="list"
+                     open="(" separator="," close=")">
+                    CAST(#{userid} AS INT)
+            </foreach>
+        </where>
 	</delete>
 </mapper>
