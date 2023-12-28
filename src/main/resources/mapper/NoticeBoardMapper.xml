@@ -132,6 +132,21 @@
         </where>
     </select>
 
+
+    <select id="fileNameCheck" resultType="int">
+        SELECT COUNT(*) FROM t_noticeFile
+
+        <where>
+            <if test="boardid != null and boardid > 0">
+                AND boardid = #{boardid}
+            </if>
+
+            <if test="originalFileName != null and originalFileName.length() > 0">
+                AND originalfilename = #{originalFileName}
+            </if>
+        </where>
+    </select>
+
     <!-- NoticeBoard 테이블 데이터 추가를 위한 쿼리 -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_noticeBoard(id, userid, title, content, createtime, modifytime, deletetime)

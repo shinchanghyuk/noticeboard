@@ -29,7 +29,7 @@
                       <div class="form-group text-start mt-2" v-show="uploadedFiles !== null && uploadedFiles.length !== 0">
                         <div v-for="(uploadedFile, index) in uploadedFiles" :key="index">
                            <a class="small" href="#">{{uploadedFile.originalFileName}}
-                            <img src="../assets/delete.jpg" alt="버튼 이미지" class="delete-button ms-1" @click="uploadedFileDelete(uploadedFile.originalFileName)"/>
+                            <img src="../assets/delete.jpg" alt="버튼 이미지" class="delete-button ms-1" @click.prevent="uploadedFileDelete(uploadedFile.originalFileName)"/>
                            </a>
                         </div>
                       </div>

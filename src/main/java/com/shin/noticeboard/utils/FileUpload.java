@@ -1,8 +1,11 @@
 package com.shin.noticeboard.utils;
 
+import com.shin.noticeboard.mapper.NoticeBoardMapper;
 import com.shin.noticeboard.model.NoticeBoard;
 import com.shin.noticeboard.model.NoticeBoardFileList;
+import com.shin.noticeboard.model.NoticeBoardFileNameCheck;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,30 +25,40 @@ public class FileUpload {
     @Value("${app.database.uploadFilePath}")
     private String uploadFilePath;
 
+    private final NoticeBoardMapper noticeBoardMapper;
+
+    @Autowired
+    public FileUpload(NoticeBoardMapper noticeBoardMapper) {
+        this.noticeBoardMapper = noticeBoardMapper;
+    }
+
     public void fileUpload(MultipartFile[] files, NoticeBoard noticeBoard) throws IOException {
         List<NoticeBoardFileList> fileList = new ArrayList<>();
 
+        String[] filename = new String[files.length];
+
+        filename = getFilename(filename, files, noticeBoard);
+
         for(int i = 0; i < files.length; i++) {
-            String filename = getFilename(files[i]);
-            String filepath = getFilePath(filename, noticeBoard.getUserid());
-
-            files[i].transferTo(new File(filepath));
-
-            fileList.add(new NoticeBoardFileList(filepath, filename));
+            if (filename[i] != null) {
+                String filepath = getFilePath(filename[i], noticeBoard.getUserid());
+                files[i].transferTo(new File(filepath));
+                fileList.add(new NoticeBoardFileList(filepath, filename[i]));
+            }
         }
 
         noticeBoard.setFileList(fileList);
     }
 
     private String getFilePath(String originalFileName, String userid) {
-        String origianlFileExtension = "";
+        String originalFileExtension = "";
 
         int lastDotIndex = originalFileName.lastIndexOf(".");
         if (lastDotIndex >= 0) {
-            origianlFileExtension = originalFileName.substring(lastDotIndex + 1);
+            originalFileExtension = originalFileName.substring(lastDotIndex + 1);
         }
 
-        String fileName = userid + "_" + System.currentTimeMillis() + "." + origianlFileExtension;
+        String fileName = userid + "_" + System.currentTimeMillis() + "." + originalFileExtension;
 
         LocalDate currentDate = LocalDate.now();
 
@@ -64,10 +77,25 @@ public class FileUpload {
         return uploadFilePath + File.separator + formattedDate + File.separator + fileName;
     }
 
-    private String getFilename(MultipartFile file) {
-        log.info("FileUpload - getFilename : {}", file.getOriginalFilename());
+    private String[] getFilename(String[] filename, MultipartFile[] file, NoticeBoard noticeBoard) {
 
-        // 같은 이름을 가지고 있
-        return file.getOriginalFilename();
+        for(int i = 0; i < filename.length; i++) {
+            String originalFilename = file[i].getOriginalFilename();
+
+            NoticeBoardFileNameCheck noticeBoardFileNameCheck = new NoticeBoardFileNameCheck(noticeBoard.getId(), originalFilename);
+            int count = noticeBoardMapper.fileNameCheck(noticeBoardFileNameCheck);
+
+            if(count > 0) {
+                int lastDotIndex = originalFilename.lastIndexOf(".");
+                if (lastDotIndex >= 0) {
+                    String originalFileExtension = originalFilename.substring(lastDotIndex + 1);
+                    originalFilename = originalFilename + "_" + count + "." + originalFileExtension;
+                }
+            }
+
+            filename[i] = originalFilename;
+        }
+        // 같은 이름을 가지고 있을때는 filename_2.jpg 와 같은 형식으로 원본파일 이름이 변경
+        return filename;
     }
 }

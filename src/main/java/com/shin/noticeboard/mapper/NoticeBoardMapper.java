@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.shin.noticeboard.model.NoticeBoard;
 import com.shin.noticeboard.model.NoticeBoardFile;
+import com.shin.noticeboard.model.NoticeBoardFileNameCheck;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -18,6 +19,7 @@ public interface NoticeBoardMapper {
 
     NoticeBoardFile fileSelect(NoticeBoardFile noticeBoardFile);
 
+    int fileNameCheck(NoticeBoardFileNameCheck noticeBoardFileNameCheck);
     int insert(NoticeBoard noticeBoard);
 
     void fileInsert(NoticeBoardFile noticeBoardFile);
