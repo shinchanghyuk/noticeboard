@@ -62,15 +62,15 @@ export default {
       }
 
       axios({
-        url: this.apiBaseUrl + "noticeboard/login/",
+        url: this.apiBaseUrl + "login/",
         method: "POST",
         data: {
           userid: this.useridInput,
           password: this.passwordInput,
         }
-        }).then(res => {
+      }).then(res => {
           this.responseData = res.data;
-          
+
           if(this.responseData.returnvalue == "1001" || this.responseData.returnvalue == "1000") {
             alert("로그인에 성공하였습니다.");
             if(this.responseData.returnvalue == "1001") {
@@ -82,9 +82,9 @@ export default {
             // 세션스토리지에 userid, usertype을 저장함
             sessionStorage.setItem('userid', this.useridInput);
             sessionStorage.setItem('usertype', this.usertype);
-            
+
             // this.$router.push({ path: '/boardMain', query: { userid: this.useridInput, usertype: this.usertype}});
-            this.$router.push('/noticeboard/boardMain');
+            this.$router.push('/main');
           } else {
             alert("로그인에 실패하였습니다.");
           }
@@ -92,11 +92,11 @@ export default {
           console.log("BoardLogin - Exception : " + err);
           alert(err);
         });
-      },
-      idCreate() {
-      console.log("idCreate START");
-        this.$router.push('/noticeboard/boardRegister'); // 아이디 생성페이지로 이동
-      },
+  },
+  idCreate() {
+    console.log("idCreate START");
+    this.$router.push('/register'); // 아이디 생성페이지로 이동
+  },
   }
 };
 </script>

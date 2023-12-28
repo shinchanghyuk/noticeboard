@@ -99,25 +99,7 @@ export default {
     this.userid = this.tableData.userid;
     this.usertype = this.tableData.usertype;
 
-    // this.toggleRowSelection = (selectedRow) => {
-    //   console.log("DataTable - created toggleRowSelection");
-    //   const index = this.itemsSelected.value.indexOf(selectedRow);
-
-    //   if (index === -1) {
-    //     // 선택되지 않은 경우, 선택 목록에 추가
-    //     this.itemsSelected.value.push(selectedRow);
-    //   } else {
-    //     // 이미 선택된 경우, 선택 목록에서 제거
-    //     this.itemsSelected.value.splice(index, 1);
-    //   }
-    // };
-
     this.search();
-
-    // const handleRowSelected = (selectedItems) => {
-    //   console.log("DataTable - handleRowSelected START");
-    //   itemsSelected.value = selectedItems;
-    // };
   },
   methods: { // 서버와 통신하기 위한 API
     // 전체 게시글 검색
@@ -125,7 +107,7 @@ export default {
       //this.items = '';
       
       axios({
-        url: this.apiBaseUrl + "noticeboard/search/",
+        url: this.apiBaseUrl + "board/search/",
         method: "POST",
         data: {
           rowSearch: this.rowSearchValue,
@@ -139,8 +121,6 @@ export default {
 
         this.items = res.data.searchList;
 
-        // this.dateFormatModify(this.items);
-
         // 실제 총 데이터 건수를 가져와야 함
         if(res.data.totcnt == null || res.data.totcnt == "" || res.data.totcnt == 0) {
           this.totcnt = 0;
@@ -149,23 +129,9 @@ export default {
         }
       }).catch(err => {
         console.log("DataTable - search Exception : " + err);
+        alert("게시글 검색에 오류가 발생하였습니다.");
       });
     },
-    //  dateFormatModify(searchList) {
-    //   for(let i= 0; i < searchList.length; i++  ) {
-    //     var dateFormat = searchList[i].createtime;
-
-    //     var year = dateFormat.substring(0, 4);
-    //     var month = dateFormat.substring(4, 6);
-    //     var day = dateFormat.substring(6, 8);
-    //     var hour = dateFormat.substring(8, 10);
-    //     var minute = dateFormat.substring(10, 12);
-    //     var second = dateFormat.substring(12, 14);
-
-    //     var date = {year}-${month}-${day} ${hour}:${minute}:${second};
-
-    //     searchList[i].createtime = date;
-    //   }
     detailSearch() {
       // 현재페이지 및 totcnt, 총 페이지 관련 변수를 초기화 해야함
       this.rowsPerPage = 10;
@@ -177,23 +143,7 @@ export default {
       this.search();
     },
     rowClick(item) {
-      const routerParams = {
-        path: '/noticeboard/boardDetail',
-        query: {
-          id: item.id,
-          boardUserid: item.userid,
-          title: item.title,
-          content: item.content,
-          createtime: item.createtime,
-        },
-      };
-
-      // item.originalFileName 값이 있을 때만 filename 파라미터 추가
-      if (item.originalFileName) {
-        routerParams.query.filename = item.originalFileName;
-      }
-
-      this.$router.push(routerParams);
+      this.$router.push({ path: `/detail/${item.id}` });
     },
     prevPage() {
       console.log("DataTable - prevPage START")
@@ -210,10 +160,6 @@ export default {
     updateRowsPerPage() {
       console.log("DataTable - updateRowsPerPage START");
     },
-    // boardDelete() {
-    //   console.log("DataTable - boardDelete START");
-    //   this.itemsSelected=[];
-    // },
   },
   watch: {
     rowsPerPage(newValue, oldValue) { // rowsPerPage 값이 변경될 때 호출

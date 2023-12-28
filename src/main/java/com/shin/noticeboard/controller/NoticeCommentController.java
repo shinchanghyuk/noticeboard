@@ -18,7 +18,6 @@ import java.util.Date;
 
 @Slf4j
 @RestController
-@RequestMapping("/noticeboard")
 public class NoticeCommentController {
     
     private final ObjectMapper objectMapper;
@@ -31,7 +30,7 @@ public class NoticeCommentController {
     }
 
     // 게시글에 포함된 댓글검색
-    @PostMapping(value = "/commentSearch")
+    @PostMapping(value = "/comment/search")
     public List<NoticeComment> search(@RequestBody NoticeComment noticeComment) {
         List<NoticeComment> noticeCommentList = null;
 
@@ -44,7 +43,7 @@ public class NoticeCommentController {
     }
 
     // 댓글 생성
-    @PostMapping(value = "/commentSave")
+    @PostMapping(value = "/comment/save")
     public void save(@RequestBody NoticeComment noticeComment) {
 
         log.info("NoticeCommentController - save noticeComment : {}", noticeComment);
@@ -65,7 +64,7 @@ public class NoticeCommentController {
     }
 
     // 댓글 삭제
-    @PostMapping(value = "/commentDelete")
+    @PostMapping(value = "/comment/delete")
     public void delete(@RequestBody NoticeComment noticeComment) {
         log.info("NoticeCommentController - delete noticeComment : {}", noticeComment);
         noticeCommentService.delete(noticeComment);

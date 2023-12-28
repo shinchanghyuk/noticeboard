@@ -62,45 +62,52 @@ export default {
     methods: {
         mainPageMove() {
             console.log("BoardSideNav - mainPageMove START");
-            this.$router.push('/noticeboard/boardMain');
+            this.$router.push('/main');
         },
         boardWrite() {
             console.log("BoardSideNav - boardWrite START");
-            this.$router.push('/noticeboard/boardWrite');
+            this.$router.push('/write');
         },
         accountPageMove() {
             console.log("BoardSideNav - accountPageMove START");
-            this.$router.push('/noticeboard/boardAccount');
+            this.$router.push('/account');
         },
         logout() {
             console.log("BoardSideNav - logout START");
             if(confirm("로그아웃 하시겠습니까?")) {
                 sessionStorage.removeItem("userid");
                 sessionStorage.removeItem("usertype");
-                
-                this.$router.push('/noticeboard');
+
+                 axios({
+                    url: this.apiBaseUrl + "logout",
+                    method: "GET"
+                }).then(res => {
+                    if(res.status === 200) {
+                        alert("로그아웃이 완료되었습니다.");
+                        sessionStorage.removeItem("userid");
+                        sessionStorage.removeItem("usertype");
+
+                        this.$router.push('/');  // 로그인 페이지로 이동
+                    }
+                });
             }
         },
         accountDelete() {
             console.log("BoardSideNav - accountDelete START");
             if(confirm("회원탈퇴 하시겠습니까?")) {
-                sessionStorage.removeItem("userid");
-                sessionStorage.removeItem("usertype");
-                
-                this.$router.push('/noticeboard');
-
-                const userid = this.userid;
-
                 axios({
-                    url: this.apiBaseUrl + "noticeboard/accountDelete/",
+                    url: this.apiBaseUrl + "account/Delete/",
                     method: "POST",
                     data: {
-                        userid
+                        userid: this.userid
                     }
                 }).then(res => {
                     if(res.status === 200) {
                         alert("회원탈퇴가 완료되었습니다.");
-                        this.$router.push('/noticeboard'); // 로그인 페이지로 이동
+                        sessionStorage.removeItem("userid");
+                        sessionStorage.removeItem("usertype");
+
+                        this.$router.push('/');  // 로그인 페이지로 이동
                     } else {
                         alert("회원탈퇴가 실패되었습니다.");
                     }

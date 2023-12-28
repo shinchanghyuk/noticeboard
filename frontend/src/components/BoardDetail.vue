@@ -21,9 +21,11 @@
                         <textarea rows="10" class="form-control" id="contentInput" v-model="content" readonly/>
                       </div>
 
-                      <div class="form-group text-start" v-show="filename !== undefined && filename !== ''">
+                      <div class="form-group text-start" v-show="filenames !== null && filenames.length !== 0">
                         <h5 class="mt-2">첨부파일</h5>
-                        <a class="small" href="#" @click="fileDownload">첨부파일 다운로드 - {{filename}}</a>
+                           <div v-for="(filename, index) in filenames" :key="index">
+                              <a class="small" href="#" @click="fileDownload(filename)">첨부파일 다운로드 - {{ filename.originalFileName }}</a>
+                           </div>
                         <!-- <input type="file" class="form-control" ref="fileInput" @change="fileUpload" readonly/> -->
                       </div>
                                   
@@ -34,8 +36,9 @@
                       </div>           
                     </form>
 
-  
-                    <BoardComment :boardJsonData="boardJsonData"/>
+                    <div v-if="boardJsonData.boardId !== null && boardJsonData.boardId !== ''">
+                      <BoardComment :boardJsonData="boardJsonData" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -73,29 +76,18 @@ export default {
         boardId: '',
       },
 
-      filename:'',
-    
+      filenames: [],
       apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
     };
   },
   created() {
-    this.id = this.$route.query.id;
-    this.boardUserid = this.$route.query.boardUserid;
-    // this.userid = this.$route.query.userid;
-    // this.usertype = this.$route.query.usertype;
-    
     this.userid = sessionStorage.getItem("userid");
     this.usertype = sessionStorage.getItem("usertype");
 
-    this.boardJsonData.boardUserid = this.boardUserid;
-    this.boardJsonData.boardId = this.id;
-
     this.sessionCheck();
+    this.id = this.$route.params.id;
 
-    this.title = this.$route.query.title;
-    this.content = this.$route.query.content;
-    this.createtime = this.$route.query.createtime;
-    this.filename = this.$route.query.filename;
+    this.detailSearch(this.id);
   },
   computed: {
     isModifyDelete () {
@@ -115,31 +107,54 @@ export default {
     },
   },
   methods: {
+    detailSearch(id) {
+        axios({
+            url: this.apiBaseUrl + "board/detailSearch/" + id,
+            method: "GET",
+        }).then((res) => {
+            console.log("detailSearch : ", res.data);
+
+            if(res.data != undefined && res.data != '') {
+                this.boardUserid = res.data.userid;
+                this.boardJsonData.boardUserid = res.data.userid;
+                this.boardJsonData.boardId = this.id;
+
+                this.title = res.data.title;
+                this.content = res.data.content;
+                this.createtime = res.data.createtime;
+                this.filenames = res.data.fileList;
+
+                console.log("this.filenames :" + this.filenames);
+            } else {
+                alert("검색한 게시글이 없습니다.");
+                this.$router.push('/main');
+            }
+        }).catch(err => {
+            console.log("BoardDetail - detailSearch Exception : " + err);
+            alert(err);
+        });
+    },
     mainPageMove() {
       console.log("BoardDetail - mainPageMove START");
-      //this.$router.push({ path: '/boardMain', query: { userid: this.userid, usertype: this.usertype}});
-      this.$router.push('/noticeboard/boardMain');
+      this.$router.push('/main');
     },
     boardModify() {
       console.log("BoardDetail - boardModify START");
-      // this.$router.push({ path: '/boardWrite', query: { userid: this.userid, usertype: this.usertype, title: this.title, content: this.content, id: this.id }});
-      this.$router.push({ path: '/noticeboard/boardWrite', query: { title: this.title, content: this.content, id: this.id, filename : this.filename}});
+      this.$router.push({ path: `/write/${this.id}`});
+      // this.$router.push({ path: '/write/{id}', query: { title: this.title, content: this.content, id: this.id, filename : this.filename}});
     },
-    fileDownload(event) {
+    fileDownload(downloadFile) {
       console.log("BoardDetail - fileDownload START");
-      console.log("BoardDetail - fileDownload event : " + event);
 
       this.sessionCheck();
       
       axios({
-        url: this.apiBaseUrl + "noticeboard/fileDownload/",
+        url: this.apiBaseUrl + "fileDownload/",
         method: "POST",
         data: {
-          id:this.id,
-          originalFileName:this.filename
+          boardid:this.id,
+          originalFileName:downloadFile.originalFileName
         },
-        // url: "http://127.0.0.1:8080/noticeboard/fileDownload/" + this.id + "/" + this.filename,
-        // method: "GET",
         responseType: 'blob'
       }).then((res) => {
 
@@ -147,7 +162,7 @@ export default {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', this.filename);
+        link.setAttribute('download', downloadFile.originalFileName);
         document.body.appendChild(link);
         link.click();
         
@@ -157,7 +172,7 @@ export default {
           alert("파일 다운로드에 실패하였습니다.");
         }
       }).catch(err => {
-        console.log("BoardDetail - fileDownload Excepion : " + err);
+        console.log("BoardDetail - fileDownload Exception : " + err);
         alert(err);
       });
     },
@@ -166,7 +181,7 @@ export default {
       
       if(confirm("게시글을 삭제하겠습니까?")) {
         axios({
-          url: this.apiBaseUrl + "noticeboard/delete/",
+          url: this.apiBaseUrl + "board/delete/",
           method: "POST",
           data: [
             this.id
@@ -175,7 +190,7 @@ export default {
           if(res.status === 200) {
             alert("게시글 삭제를 성공하였습니다.");
             // this.$router.push({ path: '/boardMain', query: { userid: this.userid, usertype: this.usertype}});
-            this.$router.push('/noticeboard/boardMain');
+            this.$router.push('/main');
           } else {
             alert("게시글 삭제를 실패하였습니다.");
           }
@@ -189,7 +204,7 @@ export default {
       // 세션만료 시 로그인 화면으로 이동
       if((this.userid == null || this.userid == "") || (this.usertype == null || this.usertype == "")) {
         alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
-        this.$router.push('/noticeboard');
+        this.$router.push('/');
       }
     }
   }

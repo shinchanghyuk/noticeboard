@@ -42,7 +42,7 @@ export default {
         // 세션만료 시 로그인 화면으로 이동
         if((this.userid == null || this.userid == "") || (this.usertype == null || this.usertype == "")) {
             alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
-            this.$router.push('/noticeboard');
+            this.$router.push('/');
         }
     },
     data() {
@@ -67,7 +67,7 @@ export default {
         boardWrite() {
             console.log("BoardMain - boardWrite START");
             //this.$router.push({ path: '/boardWrite', query: { userid: this.userid, usertype: this.usertype}});
-            this.$router.push('/noticeboard/boardWrite');
+            this.$router.push('/write');
         },
     }
 }

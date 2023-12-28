@@ -7,10 +7,11 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-@Getter
-@Setter
-public class NoticeBoard {
+import java.util.ArrayList;
+import java.util.List;
 
+@Getter @Setter
+public class NoticeBoard {
     @JsonProperty("id")
     private int id;
 
@@ -50,11 +51,26 @@ public class NoticeBoard {
     @JsonProperty("rowSearch")
     private String rowSearch;
 
-    @JsonProperty("filePath")
-    private String filePath;
+    @JsonProperty("fileList")
+    private List<NoticeBoardFileList> fileList;
 
-    @JsonProperty("originalFileName")
-    private String originalFileName;
+    @JsonProperty("uploadedFileName")
+    private List<String> uploadedFileName;
+
+
+//    @JsonProperty("filePath")
+//    private List<String> filePath = new ArrayList<>();
+//
+//    @JsonProperty("originalFileName")
+//    private List<String> originalFileName = new ArrayList<>();
+//
+//    public void setFilePath(String filePath) {
+//        this.filePath.add(filePath);
+//    }
+//
+//    public void setOriginalFileName(String originalFileName) {
+//        this.originalFileName.add(originalFileName);
+//    }
 
     @Override
     public String toString() {

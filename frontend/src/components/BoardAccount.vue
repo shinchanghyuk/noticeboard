@@ -57,6 +57,7 @@ export default {
   data() {
     return {
       useridInput:'',
+      usertype:'',
       passwordInput: '',
       passwordConfirmInput:'',
 
@@ -66,13 +67,15 @@ export default {
   },
   created() {
     this.useridInput= sessionStorage.getItem("userid");
+    this.usertype = sessionStorage.getItem("usertype");
+    this.sessionCheck();
   },
   computed: {},
   methods: {
     async userCheck() {
       // 비동기가 아닌 동기로 작업해야지만 로그인 결과를 조건문에서 사용할 수 있음
       await axios({
-        url: this.apiBaseUrl + "noticeboard/login/",
+        url: this.apiBaseUrl + "login/",
         method: "POST",
         data: {
           userid: this.useridInput,
@@ -96,10 +99,7 @@ export default {
       });
     },
     modify() {
-      if((sessionStorage.getItem("userid") == null || sessionStorage.getItem("userid") == "") || (sessionStorage.getItem("usertype") == null || sessionStorage.getItem("usertype")) == "") {
-        alert("세션이 만료되었습니다. 다시 로그인 해주세요.");
-        return;
-      }
+      this.sessionCheck();
 
       if(!this.userCheck()) { 
         console.log("BoardAccount - usercheck is false : " + this.userCheck());
@@ -108,7 +108,7 @@ export default {
       }
 
       axios({
-        url: this.apiBaseUrl + "noticeboard/accountModify/",
+        url: this.apiBaseUrl + "account/modify/",
         method: "POST",
         data: {
           userid: this.useridInput,
@@ -118,7 +118,7 @@ export default {
           // alert(res.data.message);
           if(res.status === 200) {
             alert("사용자 정보수정을 성공하였습니다. 재로그인 해주세요");
-            this.$router.push('/noticeboard'); // 로그인 페이지로 이동
+            this.$router.push('/'); // 로그인 페이지로 이동
             sessionStorage.removeItem("userid");
             sessionStorage.removeItem("usertype");
           } else {
@@ -131,8 +131,15 @@ export default {
     },
     mainPageMove() {
       console.log("mainPageMove START");
-      this.$router.push('/noticeboard/boardMain'); // 메인 페이지로 이동
+      this.$router.push('/main'); // 메인 페이지로 이동
     },
+    sessionCheck() {
+      // 세션만료 시 로그인 화면으로 이동
+      if((this.useridInput == null || this.useridInput == "") || (this.usertype == null || this.usertype == "")) {
+        alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
+        this.$router.push('/');
+      }
+    }
   }
 };
 </script>

@@ -11,6 +11,7 @@ const app = createApp(App);
 app.component('EasyDataTable', Vue3EasyDataTable);
 
 app.provide('$axios', axios);
+
 app.config.productionTip = false
 app.use(router);
 app.mount('#app');

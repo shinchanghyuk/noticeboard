@@ -12,11 +12,10 @@
       <maxHistory>180</maxHistory>
     </rollingPolicy>
 
-     <encoder>
-            <charset>UTF-8</charset>
-            <pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
-        </encoder>
-
+    <encoder>
+        <charset>UTF-8</charset>
+        <pattern>%d %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
   </appender>
 
     <root level="info">

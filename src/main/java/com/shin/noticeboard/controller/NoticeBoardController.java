@@ -1,19 +1,13 @@
 package com.shin.noticeboard.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import com.shin.noticeboard.utils.FileUpload;
+import com.shin.noticeboard.model.NoticeBoardFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -25,18 +19,8 @@ import com.shin.noticeboard.model.NoticeBoardSearchList;
 import com.shin.noticeboard.service.NoticeBoardService;
 import com.shin.noticeboard.service.NoticeCommentService;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
- 
 @Slf4j
 @RestController
-@RequestMapping("/noticeboard")
 public class NoticeBoardController {
     
     private final ObjectMapper objectMapper;
@@ -50,8 +34,8 @@ public class NoticeBoardController {
         this.noticeCommentService = noticeCommentService;
     }
 
-    // 게시물 검색
-    @PostMapping("/search")
+    // 게시물 전체 검색
+    @PostMapping("/board/search")
     public NoticeBoardSearchList search(@RequestBody NoticeBoard noticeBoard) {
         NoticeBoardSearchList noticeBoardSearchList = null;
 
@@ -63,21 +47,29 @@ public class NoticeBoardController {
         return noticeBoardSearchList;
     }
 
+    // 특정 게시글 검색
+    @GetMapping("/board/detailSearch/{id}")
+    public NoticeBoard detailSearch(@PathVariable("id") int id) {
+        log.info("NoticeBoardController - detailSearch id : {}", id);
+        return noticeBoardService.detailSearch(id);
+    }
+
     // 게시물 생성
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public void save(@ModelAttribute NoticeBoard noticeBoard, @RequestParam(required = false, name = "file") MultipartFile file) {
+    @RequestMapping(value = "/board/save", method = RequestMethod.POST)
+    public void save(@ModelAttribute NoticeBoard noticeBoard,
+                     @RequestParam(required = false, name = "files") MultipartFile[] files) {
         log.info("NoticeBoardController - save noticeBoard : {}", noticeBoard.toString());
 
         // Id가 0이면 새로 생성되는 게시글임
         if(noticeBoard.getId() == 0) {
-           noticeBoardService.save(file, noticeBoard);
+            noticeBoardService.save(files, noticeBoard);
         } else {
-            noticeBoardService.modify(file, noticeBoard);
+            noticeBoardService.modify(files, noticeBoard);
         }     
     }
 
     // 게시물 삭제
-    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/board/delete", method = RequestMethod.POST)
     public void delete(@RequestBody String requestPayload) {
         List<String> id = new ArrayList<>();
 
@@ -97,8 +89,8 @@ public class NoticeBoardController {
     }
 
     @PostMapping(value = "/fileDownload")
-    public ResponseEntity<byte[]> fileDownload(@RequestBody NoticeBoard noticeBoard) {
-        log.info("NoticeBoardController - fileDownload noticeBoard : {}", noticeBoard);
-        return noticeBoardService.fileDownload(noticeBoard);
+    public ResponseEntity<byte[]> fileDownload(@RequestBody NoticeBoardFile noticeBoardFile) {
+        log.info("NoticeBoardController - fileDownload noticeBoardFile : {}", noticeBoardFile.toString());
+        return noticeBoardService.fileDownload(noticeBoardFile);
     }
 }

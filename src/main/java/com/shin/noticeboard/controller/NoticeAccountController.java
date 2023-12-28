@@ -1,6 +1,9 @@
 package com.shin.noticeboard.controller;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +19,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shin.noticeboard.model.NoticeAccount;
 import com.shin.noticeboard.model.RestReturnVo;
 import com.shin.noticeboard.service.NoticeAccountService;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 // 검증 , 쿠키 , 세션 ,
 @RestController
-@RequestMapping("/noticeboard")
 @Slf4j
 public class NoticeAccountController {
     
@@ -32,15 +35,19 @@ public class NoticeAccountController {
         this.noticeAccountService = noticeAccountService;
     }
 
+    @GetMapping("/logout")
+    public void logout(HttpSession session) {
+        noticeAccountService.logout(session);
+    }
+
     // 아이디 로그인
-    @PostMapping(value = "/login")
-    @ResponseBody
-    public RestReturnVo login(@RequestBody NoticeAccount noticeAccount) {
+    @PostMapping("/login")
+    public RestReturnVo login(@RequestBody NoticeAccount noticeAccount, HttpSession session) {
         RestReturnVo result = null;
 
         log.info("NoticeAccountController - login noticeAccount : {}", noticeAccount.toString());
 
-        result = noticeAccountService.login(noticeAccount);
+        result = noticeAccountService.login(noticeAccount, session);
         log.info("NoticeAccountController - login result : {}", result.toString());
 
         // 프론트에 데이터 전달 로직추가
@@ -48,18 +55,17 @@ public class NoticeAccountController {
     }
 
     // 아이디 생성
-    @PostMapping(value = "/create")
-    @ResponseBody
+    @PostMapping("/account/register")
     public void create(@RequestBody NoticeAccount noticeAccount) {
 
-        log.info("NoticeAccountController - create noticeAccount : {}", noticeAccount.toString());
+        log.info("NoticeAccountController - register noticeAccount : {}", noticeAccount.toString());
 
         // 에러를 던지면 response status가 200이 아님
-        noticeAccountService.create(noticeAccount);
+        noticeAccountService.register(noticeAccount);
     }
 
     // 사용자 수정
-    @PostMapping(value = "/accountModify")
+    @PostMapping("/account/modify")
     public void modify(@RequestBody NoticeAccount noticeAccount) {
         log.info("NoticeAccountController - modify noticeAccount : {}", noticeAccount);
 
@@ -67,7 +73,7 @@ public class NoticeAccountController {
     }
 
     // 사용자 삭제
-    @PostMapping(value = "/accountDelete")
+    @PostMapping(value = "/account/delete")
     public void delete(@RequestBody String requestPayload) {
         List<String> id = new ArrayList<>();
 

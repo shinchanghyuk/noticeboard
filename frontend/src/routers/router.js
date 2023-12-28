@@ -11,49 +11,97 @@ import BoardNotPage from '../components/BoardNotPage.vue';
 
 const routes = [
   {
-    path: '/noticeboard',
+    path: '/login',
     name: 'BoardLogin',
     component: BoardLogin,
   },
   {
     path: '/',
-    redirect: '/noticeboard',
+    redirect: '/login',
   },
   {
-    path: '/noticeboard/boardMain',
+    path: '/main',
     name: 'BoardMain',
     component: BoardMain,
   },
   {
-    path: '/noticeboard/boardRegister',
+    path: '/register',
     name: 'BoardRegister',
     component: BoardRegister,
   },
   {
-    path: '/noticeboard/boardWrite',
+    path: '/write',
     name: 'BoardWrite',
     component: BoardWrite,
+    alias: '/write/:id',
   },
   {
-    path: '/noticeboard/boardDetail',
+    path: '/detail/:id',
     name: 'BoardDetail',
     component: BoardDetail,
   },
   {
-    path: '/noticeboard/boardAccount',
+    path: '/account',
     name: 'BoardAccount',
     component: BoardAccount,
   },
   {
-    path: "/noticeboard/boardNotPage",
+    path: "/notPage",
     name: "BoardNotPage",
     component: BoardNotPage,
   },
   {
     path: "/:pathMatch(.*)*",
-    redirect: "/noticeboard/boardNotPage"
+    redirect: "/notPage"
     }
 ];
+
+//
+//const routes = [
+//  {
+//    path: '/noticeboard',
+//    name: 'BoardLogin',
+//    component: BoardLogin,
+//  },
+//  {
+//    path: '/',
+//    redirect: '/noticeboard',
+//  },
+//  {
+//    path: '/noticeboard/boardMain',
+//    name: 'BoardMain',
+//    component: BoardMain,
+//  },
+//  {
+//    path: '/noticeboard/boardRegister',
+//    name: 'BoardRegister',
+//    component: BoardRegister,
+//  },
+//  {
+//    path: '/noticeboard/boardWrite',
+//    name: 'BoardWrite',
+//    component: BoardWrite,
+//  },
+//  {
+//    path: '/noticeboard/boardDetail',
+//    name: 'BoardDetail',
+//    component: BoardDetail,
+//  },
+//  {
+//    path: '/noticeboard/boardAccount',
+//    name: 'BoardAccount',
+//    component: BoardAccount,
+//  },
+//  {
+//    path: "/noticeboard/boardNotPage",
+//    name: "BoardNotPage",
+//    component: BoardNotPage,
+//  },
+//  {
+//    path: "/:pathMatch(.*)*",
+//    redirect: "/noticeboard/boardNotPage"
+//    }
+//];
 
 const router = createRouter({
   history: createWebHistory(),

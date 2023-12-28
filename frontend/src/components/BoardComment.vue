@@ -12,8 +12,8 @@
           <div class="d-flex">
           
           <!-- 수정 삭제는 관리자 및 게시글, 댓글 작성자만 할 수 있도록 수정해야 함-->
-            <button class="btn btn-primary mx-1" v-show="comment.boardUserid === userid || comment.userid === userid || usertype == 1" @click="modifyComment(index)">수정</button>
-            <button class="btn btn-primary mx-1" v-show="comment.boardUserid === userid || comment.userid === userid || usertype == 1" @click="deleteComment(index)">삭제</button>
+            <button class="btn btn-primary mx-1" v-show="boardDataJsonData.boardUserid === userid || comment.userid === userid || usertype == 1" @click="modifyComment(index)">수정</button>
+            <button class="btn btn-primary mx-1" v-show="boardDataJsonData.boardUserid === userid || comment.userid === userid || usertype == 1" @click="deleteComment(index)">삭제</button>
           </div>
         </div>
       </div>
@@ -42,10 +42,7 @@ export default {
       usertype: '',
       commentInput: '',
       boardId: '',
-      comments: [
-         { userid: 'admin', comment: '테스트데이터 내용1', createtime: '2023-09-08 14:32:35' },
-         { userid: 'admin', comment: '테스트데이터 내용2', createtime: '2023-09-08 14:32:35' }
-      ],
+      comments: [],
       boardDataJsonData: this.boardJsonData,
 
       modifyButtonClick: false,
@@ -58,9 +55,9 @@ export default {
   created() {
     this.userid = sessionStorage.getItem("userid");
     this.usertype = sessionStorage.getItem("usertype");
-    // this.boardDataJsonData = this.boardJsonData;
 
-    console.log("BoardComment - created : ", this.boardDataJsonData);  
+    console.log("BoardComment - created : ", this.boardDataJsonData);
+
     this.searchComment();
   },
   computed: { },
@@ -72,7 +69,7 @@ export default {
       this.sessionCheck();
     
       axios({
-        url: this.apiBaseUrl + "noticeboard/commentSearch/",
+        url: this.apiBaseUrl + "comment/search/",
         method: "POST",
         data: {
           boardid: this.boardDataJsonData.boardId,
@@ -141,7 +138,7 @@ export default {
       }
 
       axios({
-        url: this.apiBaseUrl + "noticeboard/commentSave/",
+        url: this.apiBaseUrl + "comment/save/",
         method: "POST",
         data: {
           userid: this.userid,
@@ -177,11 +174,14 @@ export default {
         } else { // 댓글 작성일 때 
           this.commentInput='';
         }
-       
     },
     deleteComment(index) {
     console.log("deleteComment START");
     console.log("deleteComment index : " + index);
+
+    if(!confirm("댓글을 삭제하겠습니까?")) {
+        return;
+    }
 
     this.sessionCheck();
 
@@ -189,7 +189,7 @@ export default {
     commentid = this.boardDataJsonData.boardId + "-" + this.comments[index].createtime;
 
     axios({
-      url: this.apiBaseUrl + "noticeboard/commentDelete/",
+      url: this.apiBaseUrl + "comment/delete/",
       method: "POST",
       data: {
         // 몇번째의 댓글에 대한 삭제버튼인지 알 수 있는 ID를 담아야 함
@@ -214,7 +214,7 @@ export default {
       // 세션만료 시 로그인 화면으로 이동
       if((this.userid == null || this.userid == "") || (this.usertype == null || this.usertype == "")) {
         alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
-        this.$router.push('/noticeboard');
+        this.$router.push('/');
       }
     }
   }

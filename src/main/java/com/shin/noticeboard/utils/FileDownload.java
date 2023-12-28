@@ -1,5 +1,7 @@
 package com.shin.noticeboard.utils;
 
+import com.shin.noticeboard.model.NoticeBoard;
+import com.shin.noticeboard.model.NoticeBoardFile;
 import com.shin.noticeboard.model.NoticeBoardSearchList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -14,38 +16,19 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class FileDownload {
-    public ResponseEntity<byte[]> fileDownload(NoticeBoardSearchList noticeBoardSearchList) {
+    public ResponseEntity<byte[]> fileDownload(NoticeBoardFile noticeBoardFile) {
         byte[] fileByte = null;
 
         HttpHeaders headers = new HttpHeaders();
         HttpStatus httpStatus = null;
 
-        if(noticeBoardSearchList.getSearchList() != null && !noticeBoardSearchList.getSearchList().isEmpty()) {
-            for (int i = 0; i < noticeBoardSearchList.getSearchList().size(); i++) {
-                if (noticeBoardSearchList.getSearchList().get(i).getFilePath() != null && noticeBoardSearchList.getSearchList().get(i).getFilePath() != "") {
-                    fileByte = getBytes(noticeBoardSearchList.getSearchList().get(i).getFilePath());
+        if(noticeBoardFile.getFilePath() != null && !noticeBoardFile.getFilePath().isEmpty()) {
+            fileByte = getBytes(noticeBoardFile.getFilePath());
 
-                    String origianlFileExtension = "";
+            headers.add("Accept-Ranges", "bytes");
+            headers.add("Content-Length", String.valueOf(fileByte.length));
 
-                    int lastDotIndex = noticeBoardSearchList.getSearchList().get(i).getOriginalFileName().lastIndexOf(".");
-                    if (lastDotIndex >= 0) {
-                        origianlFileExtension = noticeBoardSearchList.getSearchList().get(i).getOriginalFileName().substring(lastDotIndex + 1);
-                    }
-
-                    if (origianlFileExtension.equalsIgnoreCase("txt")) {
-                        headers.add("Content-Type", "text/plain");
-                    } else if (origianlFileExtension.equalsIgnoreCase("png")) {
-                        headers.add("Content-Type", "image/png");
-                    } else if (origianlFileExtension.equalsIgnoreCase("jpeg")) {
-                        headers.add("Content-Type", "image/jpeg");
-                    }
-
-                    headers.add("Accept-Ranges", "bytes");
-                    headers.add("Content-Length", String.valueOf(fileByte.length));
-
-                    httpStatus = HttpStatus.OK;
-                }
-            }
+            httpStatus = HttpStatus.OK;
         } else {
             log.info("FileDownload - fileDownload file empty");
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

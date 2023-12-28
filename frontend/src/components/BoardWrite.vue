@@ -21,16 +21,17 @@
                         <textarea rows="10" class="form-control" id="contentInput" v-model="contentInput" placeholder="본문내용을 입력해주세요." />
                       </div>
 
-                      <div class="form-group" v-show="uploadedFile === undefined || uploadedFile === ''">
+                      <div class="form-group">
                         <h5 class="text-start mt-2" for="fileInput">첨부파일</h5>
-                          <input type="file" class="form-control" ref="fileInput" @change="fileUpload" />
+                          <input type="file" class="form-control" multiple ref="fileInput" @change="fileUpload" />
                       </div>
 
-                      <div class="form-group text-start mt-2" v-show="uploadedFile !== undefined && uploadedFile !== ''">
-                        <a class="small" href="#">{{uploadedFile}}
-                          <img src="../assets/delete.jpg" alt="버튼 이미지" class="delete-button ms-1" @click="uploadedFileDelete"/>
-                        </a>
-                         <!-- <button class="btn btn-primary ms-1 delete-button" @click="uploadedFileDelete">삭제</button></a> -->
+                      <div class="form-group text-start mt-2" v-show="uploadedFiles !== null && uploadedFiles.length !== 0">
+                        <div v-for="(uploadedFile, index) in uploadedFiles" :key="index">
+                           <a class="small" href="#">{{uploadedFile.originalFileName}}
+                            <img src="../assets/delete.jpg" alt="버튼 이미지" class="delete-button ms-1" @click="uploadedFileDelete(uploadedFile.originalFileName)"/>
+                           </a>
+                        </div>
                       </div>
 
                       <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
@@ -65,8 +66,8 @@ export default {
       usertype: '',
       id:'',
       buttonType: '',
-      selectedFile: '',
-      uploadedFile: '',
+      selectedFiles: '',
+      uploadedFiles: [],
       title:'',
 
       apiBaseUrl: process.env.VUE_APP_API_URL // 환경 변수에서 정의한 URL 사용
@@ -77,22 +78,18 @@ export default {
       console.log("fileUpload START");
 
       this.sessionCheck();
+      this.selectedFiles = event.target.files;
 
-      if(this.uploadedFile) {
-        alert("게시글에 1개의 첨부파일만 업로드 가능합니다.");
-        return;
-      }
-
-      console.log("fileUpload event : ", event.target.files[0]);
-      this.selectedFile = event.target.files[0];
-
+      /// var filename = event.target.files
     },
-    uploadedFileDelete() {
+    uploadedFileDelete(deleteFile) {
       console.log("uploadedFileDelete START");
 
       this.sessionCheck();
-      
-      this.uploadedFile = '';
+
+      this.uploadedFiles = this.uploadedFiles.filter(item => item.originalFileName !== deleteFile);
+
+      console.log("uploaded file length : " + this.uploadedFiles.length);
     },
     boardSaveModify() {
       console.log("boardSaveModify START");
@@ -113,13 +110,20 @@ export default {
         formData.append('id', this.id);
       }
 
-      // 파일객체
-      if(this.selectedFile) {
-        formData.append('file', this.selectedFile);
+      if (this.selectedFiles) {
+        for (let i = 0; i < this.selectedFiles.length; i++) {
+          formData.append("files", this.selectedFiles[i]);
+        }
       }
-      
+
+      if(this.uploadedFiles) {
+        for (let i = 0; i < this.uploadedFiles.length; i++) {
+          formData.append("uploadedFileName", this.uploadedFiles[i].originalFileName);
+        }
+      }
+
       axios({
-        url: this.apiBaseUrl + "noticeboard/save/",
+        url: this.apiBaseUrl + "board/save",
         method: "POST",
         data: formData,
         headers: {
@@ -134,45 +138,64 @@ export default {
             alert("게시글 저장을 성공하였습니다.");
           }
           // this.$router.push({ path: '/boardMain', query: { userid: this.userid, usertype: this.usertype}});
-          this.$router.push('/noticeboard/boardMain');
+          this.$router.push('/main');
         } else {
-          alert("게시글 저장을 실패하였습니다.");
+          if(this.id) {
+            alert("게시글 수정에 실패하였습니다.");
+          } else {
+            alert("게시글 저장을 실패하였습니다.");
+          }
         }
       }).catch(err => {
-        console.log("BoardWrite - Exception : " + err);
+        console.log("BoardWrite - boardSaveModify Exception : " + err);
       });
     },
     mainPageMove() {
       console.log("mainPageMove START");
       //this.$router.push({ path: '/boardMain', query: { userid: this.userid, usertype: this.usertype}});
-      this.$router.push('/noticeboard/boardMain');
+      this.$router.push('/main');
     },
     sessionCheck() {
       // 세션만료 시 로그인 화면으로 이동
       if((this.userid == null || this.userid == "") || (this.usertype == null || this.usertype == "")) {
         alert("세션이 만료되었습니다. 다시 로그인 해주세요.")
-        this.$router.push('/noticeboard');
+        this.$router.push('/');
       }
-    }
+    },
+    boardDataSearch() {
+        axios({
+            url: this.apiBaseUrl + "board/detailSearch/" + this.id,
+            method: "GET",
+        }).then(res => {
+            console.log("boardDataSearch : " + res.data);
+        if(res.status === 200 && res.data != null) {
+            if(res.data.userid == this.userid) {
+                this.id = res.data.id;
+                this.titleInput = res.data.title;
+                this.contentInput = res.data.content;
+                this.uploadedFiles = res.data.fileList;
+            } else {
+                alert("잘못된 접근입니다.");
+                this.$router.push('/main');
+            }
+        }
+      }).catch(err => {
+        console.log("BoardWrite - boardDataSearch Exception : " + err);
+      });
+    },
   },
   created() {
-    // this.userid = this.$route.query.userid;
-    // this.usertype = this.$route.query.usertype;
-
     this.userid = sessionStorage.getItem("userid");
     this.usertype = sessionStorage.getItem("usertype");
 
-    this.sessionCheck();
+    this.id = this.$route.params.id;
 
-    //  게시글 상세화면에서 쓰기화면으로 넘어올 경우 title, content, id 값이 들어오게 됨
-    this.id = this.$route.query.id;
-    this.titleInput = this.$route.query.title;
-    this.contentInput = this.$route.query.content;
-    this.uploadedFile = this.$route.query.filename;
+    this.sessionCheck();
 
     if(this.id) {
       this.title = '게시글 수정';
       this.buttonType = '수정';
+      this.boardDataSearch(this.id);
     } else {
       this.title = '게시글 작성';
       this.buttonType = '저장';
